@@ -1,0 +1,23 @@
+---
+- name: Setup PostgreSQL Machine
+  hosts: all
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  pre_tasks:
+    - name: install python-ipaddress
+      apt:
+        name: python-ipaddress
+        state: present
+        update_cache: yes
+      become: yes
+  roles:
+    - role: ansible-secure
+      vars:
+        secure_deployment_user: "{{ login_user }}"
+    - role: ansible-postgres
+      vars:
+        postgres_cluster_name: main
+        postgres_enable_backups: true
+        postgres_install_ppa: true
+        postgres_user: "{{ login_user }}"
+        postgres_version: 11
